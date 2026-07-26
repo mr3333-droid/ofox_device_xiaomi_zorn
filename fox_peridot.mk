@@ -98,3 +98,7 @@ OF_FORCE_CASEFOLDING := 1
 
 # Set to the maintainer's name
 OF_MAINTAINER := azzychy
+
+# Set to 1 to enable the flashlight feature
+OF_FLASHLIGHT_ENABLE := 1
+OF_FL_PATH1 := /tmp/flashlight
