@@ -3,7 +3,7 @@
 SCRIPT_NAME="$(basename "$0")"
 
 LOGMSG() {
-    echo "I:$@" >> /tmp/recovery.log
+    echo "I:$(date +'%H:%M:%S') [$SCRIPT_NAME] $@" >> /tmp/recovery.log
 }
 
 MARKER="/persist/Fox/.format_cleanup_marker"
@@ -12,7 +12,7 @@ MARKER="/persist/Fox/.format_cleanup_marker"
 
 LOGMSG "---$SCRIPT_NAME start---"
 
-LOGMSG "Checking if recovery is in a post-format state..."
+LOGMSG "Checking if recovery is in a post-format data state..."
 
 mount /data
 
@@ -32,10 +32,17 @@ fi
 umount /sdcard
 umount -l /sdcard
 
-LOGMSG "Cleaning up temporary folders/files in /data before the initial Android boot..."
-rm -rf /data/*
+if [ -d /data/media ]; then
+    LOGMSG "Cleaning up temporary /data/media bind-mounted to /sdcard for MTP..."
+    rm -rf /data/media
+fi
 
-LOGMSG "Removing the post-format marker..."
+if [ -d /data/local ]; then
+    LOGMSG "Cleaning up temporary /data/local created by KSU add-on..."
+    rm -rf /data/local
+fi
+
+LOGMSG "Removing the post-format data marker..."
 rm -f "$MARKER"
 sync
 

@@ -46,6 +46,7 @@ on fs
     mkdir /mnt/vendor/persist 0775 shell system
     mkdir /tmp/persist 0775 shell system
     mount none /tmp/persist /mnt/vendor/persist bind rec
+    start vendor.qseecomd
 
 on init
     start vendor.boot-qti
@@ -53,23 +54,21 @@ on init
 on boot
     setprop sys.usb.config adb
     # Dual LED flashlight workaround
-    start peridot-flashlight
+    start zorn-flashlight
 
-service peridot-flashlight /system/bin/peridot_flashlight.sh
+service zorn-flashlight /system/bin/zorn_flashlight.sh
     class core
     user root
     group root
     seclabel u:r:recovery:s0
 
 on property:twrp.modules.loaded=true
-    # Mount firmware
     mkdir /firmware
     mount vfat /dev/block/bootdevice/by-name/modem${ro.boot.slot_suffix} /firmware ro
-    # Load ADSP firmware for PMIC
     wait /sys/kernel/boot_adsp/boot
     write /sys/kernel/boot_adsp/boot 1
     wait /sys/class/power_supply/battery
-    start vendor.qseecomd
+    start touch_report
     start vendor.health-recovery
     start vibratorfeature-hal-service
     umount /firmware

@@ -3,7 +3,7 @@
 SCRIPT_NAME="$(basename "$0")"
 
 LOGMSG() {
-    echo "I:$@" >> /tmp/recovery.log
+    echo "I:$(date +'%H:%M:%S') [$SCRIPT_NAME] $@" >> /tmp/recovery.log
 }
 
 LOGMSG "---$SCRIPT_NAME start---"
