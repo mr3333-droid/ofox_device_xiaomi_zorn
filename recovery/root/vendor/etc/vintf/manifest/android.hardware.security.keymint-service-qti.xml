@@ -22,9 +22,10 @@ This file is copied from
    limitations under the License.
 -->
 
-<manifest version="8.0" type="device">
+<manifest version="1.0" type="device">
     <hal format="aidl">
         <name>android.hardware.security.keymint</name>
+        <version>3</version>
         <fqname>IKeyMintDevice/default</fqname>
     </hal>
      <hal format="aidl">
@@ -37,6 +38,7 @@ This file is copied from
     </hal>
     <hal format="aidl">
         <name>android.hardware.security.keymint</name>
+        <version>3</version>
         <fqname>IRemotelyProvisionedComponent/default</fqname>
     </hal>
 </manifest>

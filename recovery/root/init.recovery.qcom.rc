@@ -46,18 +46,17 @@ on fs
     mkdir /mnt/vendor/persist 0775 shell system
     mkdir /tmp/persist 0775 shell system
     mount none /tmp/persist /mnt/vendor/persist bind rec
-    start vendor.qseecomd
 
 on init
     start vendor.boot-qti
 
 on boot
     setprop sys.usb.config adb
-    # Dual LED flashlight workaround
     start zorn-flashlight
 
 service zorn-flashlight /system/bin/zorn_flashlight.sh
     class core
+    disabled
     user root
     group root
     seclabel u:r:recovery:s0
@@ -68,12 +67,11 @@ on property:twrp.modules.loaded=true
     wait /sys/kernel/boot_adsp/boot
     write /sys/kernel/boot_adsp/boot 1
     wait /sys/class/power_supply/battery
-    start touch_report
-    start vendor.health-recovery
+    start vendor.qseecomd
     start vibratorfeature-hal-service
-    umount /firmware
+    start touch_report
 
-on property:vendor.sys.listeners.registered=true
+on property:hwservicemanager.ready=true && property:vendor.sys.listeners.registered=true
     start vendor.ssgtzd
     start vendor.secure_element
     start vendor.weaver_nxp

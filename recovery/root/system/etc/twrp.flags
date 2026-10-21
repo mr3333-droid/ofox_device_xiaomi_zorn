@@ -27,13 +27,13 @@
 /persist_image         emmc    /dev/block/bootdevice/by-name/persist                              flags=display="Persist";backup=1
 
 # Modem/Firmware partitions
-/modem                 vfat    /dev/block/bootdevice/by-name/modem                                flags=display="Modem";slotselect;fsflags="ro,shortname=lower,uid=1000,gid=1000,dmask=227,fmask=337,context=u:object_r:firmware_file:s0 wait"
+/modem                 vfat    /dev/block/bootdevice/by-name/modem                                flags=display="Modem";slotselect;wait;fsflags="ro,shortname=lower,uid=1000,gid=1000,dmask=227,fmask=337,context=u:object_r:firmware_file:s0"
 /modem_img             emmc    /dev/block/bootdevice/by-name/modem                                flags=display="Modem";backup=1;slotselect
 
-/bluetooth             vfat    /dev/block/bootdevice/by-name/bluetooth                            flags=display="Bluetooth";slotselect;fsflags="ro,shortname=lower,uid=1002,gid=3002,dmask=227,fmask=337,context=u:object_r:bt_firmware_file:s0 wait"
+/bluetooth             vfat    /dev/block/bootdevice/by-name/bluetooth                            flags=display="Bluetooth";slotselect;wait;fsflags="ro,shortname=lower,uid=1002,gid=3002,dmask=227,fmask=337,context=u:object_r:bt_firmware_file:s0"
 /bluetooth_image       emmc    /dev/block/bootdevice/by-name/bluetooth                            flags=display="Bluetooth";backup=1;slotselect;subpartitionof=/modem_img
 
-/dsp                   vfat    /dev/block/bootdevice/by-name/dsp                                  flags=display="DSP";slotselect
+/dsp                   ext4    /dev/block/bootdevice/by-name/dsp                                  flags=display="DSP";slotselect;wait;fsflags="ro,nosuid,nodev,barrier=1"
 /dsp_image             emmc    /dev/block/bootdevice/by-name/dsp                                  flags=display="DSP";backup=1;slotselect;subpartitionof=/modem_img
 
 # EFS/IMEI partitions
@@ -44,4 +44,4 @@
 
 # Removable storage
 /storage               auto    /data/media/0                                                      flags=display="Internal Storage";backup=1;usermrf;fsflags="bind,utf8";removable
-/usb_otg               auto    /dev/block/sdg1                            /dev/block/sdg4         flags=display="USB-Storage";storage;wipeingui;fsflags=utf8;removable
+/usb_otg               auto    /devices/platform/soc/a600000.ssusb/a600000.dwc3/xhci-hcd.*.auto*      flags=display="USB-OTG";storage;fsflags=utf8;removable;voldmanaged=usbotg:auto

@@ -78,11 +78,6 @@
       "File": "cpu.uclamp.latency_sensitive"
     },
     {
-      "Name": "FreezerState",
-      "Controller": "freezer",
-      "File": "cgroup.freeze"
-    },
-    {
       "Name": "CgroupProcs",
       "Controller": "cgroup2",
       "File": "cgroup.procs"
@@ -99,32 +94,6 @@
           {
             "Controller": "cpu",
             "Path": "background"
-          }
-        }
-      ]
-    },
-    {
-      "Name": "Frozen",
-      "Actions": [
-        {
-          "Name": "SetAttribute",
-          "Params":
-          {
-            "Name": "FreezerState",
-            "Value": "1"
-          }
-        }
-      ]
-    },
-    {
-      "Name": "Unfrozen",
-      "Actions": [
-        {
-          "Name": "SetAttribute",
-          "Params":
-          {
-            "Name": "FreezerState",
-            "Value": "0"
           }
         }
       ]
@@ -203,19 +172,6 @@
           {
             "Controller": "cpu",
             "Path": "rt"
-          }
-        }
-      ]
-    },
-    {
-      "Name": "RealTimeInputScheduling",
-      "Actions": [
-        {
-          "Name": "SetSchedulerPolicy",
-          "Params":
-          {
-            "Policy": "SCHED_FIFO",
-            "Priority": "2"
           }
         }
       ]
@@ -644,42 +600,6 @@
           }
         }
       ]
-    },
-    {
-      "Name": "CompactFull",
-      "Actions": [
-        {
-          "Name": "Compact",
-          "Params":
-          {
-            "Type": "full"
-          }
-        }
-      ]
-    },
-    {
-      "Name": "CompactAnon",
-      "Actions": [
-        {
-          "Name": "Compact",
-          "Params":
-          {
-            "Type": "anon"
-          }
-        }
-      ]
-    },
-    {
-      "Name": "CompactFile",
-      "Actions": [
-        {
-          "Name": "Compact",
-          "Params":
-          {
-            "Type": "file"
-          }
-        }
-      ]
     }
   ],
 
@@ -758,7 +678,7 @@
     },
     {
       "Name": "InputPolicy",
-      "Profiles": [ "RealTimeInputScheduling", "MaxPerformance", "ProcessCapacityMax", "TimerSlackNormal" ]
+      "Profiles": [ "MaxPerformance", "ProcessCapacityMax", "TimerSlackNormal" ]
     }
   ]
 }

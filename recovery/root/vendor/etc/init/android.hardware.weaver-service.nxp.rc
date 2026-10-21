@@ -1,7 +1,8 @@
-service vendor.weaver_nxp /vendor/bin/hw/android.hardware.weaver-service.nxp
+service vendor.weaver_nxp /odm/bin/hw/android.hardware.weaver-service.nxp-qti
     class hal
     user root
     group root drmrpc
-    setenv LD_LIBRARY_PATH /vendor/lib64:/vendor/lib64/hw:/system/lib64:/sbin
+    setenv LD_LIBRARY_PATH /odm/lib64:/vendor/lib64:/vendor/lib64/hw:/system/lib64:/sbin
     capabilities WAKE_ALARM
+    disabled
     seclabel u:r:recovery:s0

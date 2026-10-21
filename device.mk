@@ -14,6 +14,8 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit_only.mk)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/virtual_ab_ota.mk)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/virtual_ab_ota/compression_with_xor.mk)
 
+PRODUCT_VIRTUAL_AB_COMPRESSION_METHOD := lz4
+
 # Emulated storage support
 $(call inherit-product, $(SRC_TARGET_DIR)/product/emulated_storage.mk)
 
@@ -30,7 +32,9 @@ PRODUCT_PROPERTY_OVERRIDES += vendor.display.enable_spr=1
 PRODUCT_SHIPPING_API_LEVEL := 34
 PRODUCT_TARGET_VNDK_VERSION := 34
 BOARD_SHIPPING_API_LEVEL := 34
-SHIPPING_API_LEVEL := 34
+
+PRODUCT_PACKAGES += \
+    init.recovery.mksh.rc
 
 # Dynamic partitions
 PRODUCT_USE_DYNAMIC_PARTITIONS := true

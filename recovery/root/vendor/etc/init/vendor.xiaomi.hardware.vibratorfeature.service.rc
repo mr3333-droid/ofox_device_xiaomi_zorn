@@ -1,5 +1,4 @@
-on fs
-    # qcom-haptics
+on late-fs
     chmod 0666 /sys/class/qcom-haptics/lra_calibration
     chmod 0666 /sys/class/qcom-haptics/lra_impedance
 
@@ -7,6 +6,6 @@ service vibratorfeature-hal-service /system/bin/hw/vendor.xiaomi.hardware.vibrat
     class hal
     user root
     group root input audio
-    setenv LD_LIBRARY_PATH /system/lib64/qti_vibrator:/system/lib64:/vendor/lib64:/vendor/lib64/hw:/sbin
     disabled
+    setenv LD_LIBRARY_PATH /system/lib64/qti_vibrator:/vendor/lib64:/vendor/lib64/hw:/system/lib64:/sbin:/odm/lib64
     seclabel u:r:recovery:s0

@@ -20,9 +20,9 @@
 
 #set -o xtrace
 FDEVICE="zorn"
+export script_path="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
 
 fox_get_target_device() {
-	export script_path="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
 	if echo "$script_path" | grep -q "$FDEVICE"; then
 		FOX_BUILD_DEVICE="$FDEVICE"
 	elif echo "$0" | grep -q "$FDEVICE"; then
@@ -43,11 +43,9 @@ if [ "$FOX_BUILD_DEVICE" = "$FDEVICE" ]; then
 
     # Build
 	export LC_ALL="C"
-	export FOX_VANILLA_BUILD=1
 	export ALLOW_MISSING_DEPENDENCIES=true
 
 	# A/B Partition
-	export FOX_AB_DEVICE=1
 	export FOX_VIRTUAL_AB_DEVICE=1
 	export FOX_RECOVERY_SYSTEM_PARTITION="/dev/block/mapper/system"
 	export FOX_RECOVERY_VENDOR_PARTITION="/dev/block/mapper/vendor"
@@ -62,21 +60,19 @@ if [ "$FOX_BUILD_DEVICE" = "$FDEVICE" ]; then
 	export FOX_USE_ZSTD_BINARY=1
 	export FOX_USE_FSCK_EROFS_BINARY=1
 	export FOX_DELETE_AROMAFM=1
-	export FOX_REMOVE_AAPT=1
+	export FOX_ENABLE_APP_MANAGER=1
 	export FOX_USE_BUSYBOX_BINARY=1
 	export FOX_USE_GREP_BINARY=1
 
-  # KernelSU / Magisk Support
-  	export FOX_USE_SPECIFIC_MAGISK_ZIP="$(echo "$script_path"/prebuilt/Magisk*.zip)"
+	# KernelSU / Magisk Support
 	export FOX_MOVE_MAGISK_INSTALLER_TO_RAMDISK=1
 	export FOX_ENABLE_KERNELSU_SUPPORT=1
 	export FOX_ENABLE_KERNELSU_NEXT_SUPPORT=1
 	export FOX_ENABLE_SUKISU_SUPPORT=1
-	export FOX_USE_UPDATED_MAGISKBOOT=1
 
 	# Fox Settings
 	export FOX_SETTINGS_ROOT_DIRECTORY="/persist"
-	export FOX_MISCELLANEOUS_ROOT_DIRECTORY="/sdcard"
+	export FOX_ALLOW_EARLY_SETTINGS_LOAD=1
 
 else
 	echo "I: vendorsetup.sh skipped; device mismatch or environment issue."

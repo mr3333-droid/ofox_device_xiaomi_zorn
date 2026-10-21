@@ -6,6 +6,7 @@
 
     <hal format="aidl">
         <name>android.hardware.secure_element</name>
+        <version>1</version>
         <fqname>ISecureElement/eSE1</fqname>
     </hal>
 

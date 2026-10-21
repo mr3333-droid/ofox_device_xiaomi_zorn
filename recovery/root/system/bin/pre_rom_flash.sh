@@ -1,50 +1,37 @@
 #!/system/bin/sh
 
-SCRIPT_NAME="$(basename "$0")"
+if grep -q " /firmware " /proc/mounts 2>/dev/null; then
+    umount /firmware 2>/dev/null
+fi
 
-LOGMSG() {
-    echo "I:$(date +'%H:%M:%S') [$SCRIPT_NAME] $@" >> /tmp/recovery.log
-}
+if grep -q " /vendor/firmware_mnt " /proc/mounts 2>/dev/null; then
+    stop vendor.ssgtzd
+    umount /vendor/firmware_mnt 2>/dev/null
+fi
 
-LOGMSG "---$SCRIPT_NAME start---"
-
-LOGMSG "Resetting SPL date to prevent anti-rollback protection..."
 resetprop ro.build.version.security_patch 2024-09-01
 
-D="/metadata/ota"
-
-mount /metadata 2>/dev/null
-
-LOGMSG "Checking for stale OTA metadata which may block ROM install..."
-if [ -d "$D" ]; then
-    LOGMSG "Wiping $D..."
-    rm -rf "$D" 2>/dev/null
+if ! grep -q " /metadata " /proc/mounts 2>/dev/null; then
+    mount /metadata 2>/dev/null
 fi
 
-LOGMSG "Detecting active boot slot..."
 slot="$(getprop ro.boot.slot_suffix)"
-if [ -z "$slot" ]; then
-    LOGMSG "Unable to detect active boot slot; skipping recovery backup..."
-else
-    LOGMSG "Active boot slot: $slot"
 
-    # Check for free space in /tmp (need at least 128MB to be safe)
-    FREE_TMP=$(df /tmp | tail -n 1 | awk '{print $4}')
-    if [ "$FREE_TMP" -lt 131072 ]; then
-        LOGMSG "Insufficient space in /tmp ($FREE_TMP MB); skipping recovery backup..."
-    else
-        LOGMSG "Backing up OrangeFox recovery before ROM overwrites..."
-        if [ -e /dev/block/bootdevice/by-name/recovery${slot} ]; then
-            if dd if="/dev/block/bootdevice/by-name/recovery${slot}" of="/tmp/fox_backup.img" bs=1M; then
-                sync
-                LOGMSG "Backup of OrangeFox recovery was successful"
-            else
-                LOGMSG "Failed to backup OrangeFox recovery..."
-            fi
-        else
-            LOGMSG "Recovery partition not found; skipping backup..."
+case "$slot" in
+    _a|_b)
+        free_tmp="$(df /tmp 2>/dev/null | tail -n 1 | awk '{print $4}')"
+        if [ -z "$free_tmp" ] || [ "$free_tmp" -ge 131072 ]; then
+            for base in /dev/block/bootdevice/by-name /dev/block/by-name; do
+                recovery_block="$base/recovery$slot"
+                if [ -e "$recovery_block" ]; then
+                    if dd if="$recovery_block" of=/tmp/fox_backup.img bs=1M 2>/dev/null; then
+                        sync
+                    else
+                        rm -f /tmp/fox_backup.img
+                    fi
+                    break
+                fi
+            done
         fi
-    fi
-fi
-
-LOGMSG "---$SCRIPT_NAME end---"
+        ;;
+esac
